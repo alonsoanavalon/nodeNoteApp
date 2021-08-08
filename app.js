@@ -3,6 +3,49 @@ const app = express()
 const port = 3000
 const test = require('./routes/test')
 
+//MongoDB
+
+const mongoose = require('mongoose')
+const mongoUri = "mongodb+srv://keyzen:elmasmejor@cluster0.cdbzf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+mongoose.connect(mongoUri, {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useCreateIndex:true,
+    useFindAndModify:false
+})
+.then((db) => console.log("Mongodb is connected to", db.connection.host))
+.catch((err) => console.error(err))
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'))
+db.once('open', function() {
+    console.log('Tamos conectados')
+})
+
+const { Schema } = mongoose;
+const blogSchema = new Schema ({
+    title: String,
+    author: String,
+    votes: Number
+})
+
+const Blog = mongoose.model('Blog', blogSchema)
+
+const myBlog = new Blog({title:'Messi se va del barsa', author:'Pedro', votes:2})
+
+console.log(myBlog.title)
+
+myBlog.save((err, blog) => {
+    if (err) return console.error(err);
+    console.log(myBlog.votes)
+})
+
+Blog.find((err, blogs) => {
+    if (err) return console.error(err);
+    console.log(blogs)
+})
+
+//Definicion Middlewares
 
 let myLogger = function (req, res, next) {
     console.log("Logeado")
@@ -14,7 +57,7 @@ let requestPedo = function (req, res, next) {
     next()
 }
 
-
+//Middlewares
 app.use(express.static('public'))
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded

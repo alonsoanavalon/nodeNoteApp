@@ -1,4 +1,5 @@
 const express = require('express')
+const config = require('./config.js')
 const app = express()
 const port = 3000
 const test = require('./routes/test')
@@ -6,7 +7,7 @@ const test = require('./routes/test')
 //MongoDB
 
 const mongoose = require('mongoose')
-const mongoUri = "mongodb+srv://keyzen:elmasmejor@cluster0.cdbzf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+const mongoUri = `mongodb+srv://keyzen:${config.password}@cluster0.cdbzf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
 mongoose.connect(mongoUri, {
     useNewUrlParser: true, 
     useUnifiedTopology: true,

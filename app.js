@@ -1,8 +1,39 @@
 const express = require('express')
 const config = require('./config.js')
+const path = require('path')
 const app = express()
 const port = 3000
 const test = require('./routes/test')
+const notes = require('./routes/notes')
+const Note = require('./models/Notes')
+
+const Handlebars = require('handlebars')
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
+const exphbs = require('express-handlebars')
+const hbs = exphbs.create({
+    handlebars: allowInsecurePrototypeAccess(Handlebars),
+    layoutsDir:path.join(app.get('views'), 'layouts'),
+    partialsDir:path.join(app.get('views'), 'partials'),
+    defaultLayout:'main',
+    extname:'.hbs',
+
+    helpers:{
+        loud: function (aString) {
+            return aString.toUpperCase()
+        },
+        list: function(value, options) {
+            let out = "<ul>"
+
+            value.forEach((element) => {
+                out += "<li>"+ options.fn(element) +"</li>"
+            })
+
+        
+
+            return out + "</ul>"
+        }
+    }
+})
 
 //MongoDB
 
@@ -22,29 +53,13 @@ db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', function() {
     console.log('Tamos conectados')
 })
+//settings
 
-const { Schema } = mongoose;
-const blogSchema = new Schema ({
-    title: String,
-    author: String,
-    votes: Number
-})
+app.set('views', path.join(__dirname, 'views'))
+app.engine('.hbs', hbs.engine)
+app.set('view engine', '.hbs')
 
-const Blog = mongoose.model('Blog', blogSchema)
 
-const myBlog = new Blog({title:'Messi se va del barsa', author:'Pedro', votes:2})
-
-console.log(myBlog.title)
-
-myBlog.save((err, blog) => {
-    if (err) return console.error(err);
-    console.log(myBlog.votes)
-})
-
-Blog.find((err, blogs) => {
-    if (err) return console.error(err);
-    console.log(blogs)
-})
 
 //Definicion Middlewares
 
@@ -66,6 +81,9 @@ app.use(myLogger)
 app.use(requestPedo)
 
 app.use('/test', test)
+app.use('/notes', notes)
+
+
 
 app.get('/', (req, res) => {
     res.send('Hello World!')

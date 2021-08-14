@@ -6,6 +6,7 @@ const port = 3000
 const test = require('./routes/test')
 const notes = require('./routes/notes')
 const Note = require('./models/Notes')
+const flash = require('connect-flash')
 
 const Handlebars = require('handlebars')
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
@@ -79,6 +80,12 @@ app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use(myLogger)
 app.use(requestPedo)
+//app.use(flash())
+
+app.use((req, res, next) => {
+    //res.locals.notaEliminada = req.flash('notaEliminada')
+    next()
+})
 
 app.use('/test', test)
 app.use('/notes', notes)

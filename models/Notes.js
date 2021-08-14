@@ -8,4 +8,6 @@ notesSchema = new Schema({
     content: String
 })
 
+
+
 module.exports = model('Notes', notesSchema)

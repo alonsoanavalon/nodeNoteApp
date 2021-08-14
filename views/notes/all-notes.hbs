@@ -7,9 +7,29 @@
     <title>Document</title>
 </head>
 <body>
-    {{#list notes}}
-        <h1>{{subject}}</h1>
-        <p>{{ content}}</p>
-    {{/list}}
+
+    {{#if notaEliminada}}
+
+        <div>{{notaEliminada}}</div>
+
+    {{/if}}
+
+    <section class="notes">
+        {{#each notes}}
+            <div class="note">
+                <h4>{{subject}}</h4>
+                <div class="options">
+                    <a href="/notes/edit/{{_id}}">Editar</a>
+                </div>
+                <div class="note-content">
+                    <p>{{content}}</p>
+                </div>
+                <a href="/notes/delete/{{_id}}">Eliminar</a>
+
+            </div>
+        {{/each}}
+    </section>
+    
+  
 </body>
 </html>

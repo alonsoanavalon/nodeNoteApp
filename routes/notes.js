@@ -26,5 +26,18 @@ route('/')
     res.send('Nota agregada')
 })
 
+router.
+route('/delete/:id')
+.get((req, res) => {
+    console.log(req.params.id)
+    res.send(`Eliminando ${req.params.id}`)
+    Note.findByIdAndDelete(req.params.id)
+    //req.flash('notaEliminada', 'haz eliminado la nota')
+    
+})
+
+
+
+
 module.exports = router;
 

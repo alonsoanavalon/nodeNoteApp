@@ -4,10 +4,11 @@ const path = require('path')
 const app = express()
 const port = 3000
 const test = require('./routes/test')
+const signup = require('./routes/signup')
 const notes = require('./routes/notes')
 const Note = require('./models/Notes')
 const flash = require('connect-flash')
-
+const morgan = require('morgan')
 const Handlebars = require('handlebars')
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 const exphbs = require('express-handlebars')
@@ -80,6 +81,7 @@ app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use(myLogger)
 app.use(requestPedo)
+app.use(morgan('dev'))
 //app.use(flash())
 
 app.use((req, res, next) => {
@@ -89,6 +91,7 @@ app.use((req, res, next) => {
 
 app.use('/test', test)
 app.use('/notes', notes)
+app.use('/signup', signup)
 
 
 
